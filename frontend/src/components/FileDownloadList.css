@@ -1,0 +1,41 @@
+.file-download-container {
+  font-family: 'Arial', sans-serif; /* Change font */
+  margin: 2rem 0;
+}
+
+.file-download-container h2 {
+  margin-bottom: 1rem;
+}
+
+.file-download-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.file-download-table th, .file-download-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.file-download-table th {
+  background-color: darkcyan;
+  color: white;
+}
+
+.file-download-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.file-download-table tr:hover {
+  background-color: #ddd;
+}
+
+.file-download-table a {
+  color: darkcyan;
+  text-decoration: none;
+}
+
+.file-download-table a:hover {
+  text-decoration: underline;
+}
+

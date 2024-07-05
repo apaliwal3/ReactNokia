@@ -1,0 +1,48 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import './FileDownloadList.css'; // Import the CSS file
+
+const FileDownloadList = () => {
+  const [fileDetails, setFileDetails] = useState([]);
+
+  useEffect(() => {
+    const fetchFileDetails = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/processed-files');
+        setFileDetails(response.data);
+      } catch (error) {
+        console.error('Error fetching file details:', error);
+      }
+    };
+
+    fetchFileDetails();
+  }, []);
+
+  return (
+    <div className="file-download-container">
+      <h2>Processed Files</h2>
+      <table className="file-download-table">
+        <thead>
+          <tr>
+            <th>Original Filename</th>
+            <th>Processed Timestamp</th>
+            <th>Download</th>
+          </tr>
+        </thead>
+        <tbody>
+          {fileDetails.map((file, index) => (
+            <tr key={index}>
+              <td>{file.originalName}</td>
+              <td>{file.timestamp}</td>
+              <td><a href={file.url} download>Download</a></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default FileDownloadList;
+
+

@@ -3,7 +3,7 @@ import FileUpload from '../components/FileUpload';
 import FileDownloadList from '../components/FileDownloadList';
 import './ProcessType.css'; // Import the CSS file
 
-const ProcessType1 = () => {
+const ProcessType3 = () => {
   const [uploaded, setUploaded] = useState(false);
 
   const handleUploadComplete = () => {
@@ -19,4 +19,4 @@ const ProcessType1 = () => {
   );
 };
 
-export default ProcessType1;
+export default ProcessType3;

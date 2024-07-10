@@ -74,7 +74,7 @@ const FileUpload = ({ onUploadComplete, script }) => {
           Select files to upload
           <input type="file" onChange={handleFileChange} multiple />
         </label>
-        <button className="upload-button" onClick={handleUpload}>Upload</button>
+        <button className="upload-button" onClick={handleUpload}>Generate</button>
       </div>
       <div className="file-info">
         {files.length > 0 && (

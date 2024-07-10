@@ -21,7 +21,7 @@ def process_excel(file_path):
     # Save the modified DataFrame to a new Excel file
     os.makedirs('processed', exist_ok=True)
     original_filename = os.path.splitext(os.path.basename(file_path))[0]
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     result_file_path = f'processed/{original_filename}_processed_{timestamp}.xlsx'
     result_file_path = result_file_path if result_file_path.endswith('.xlsx') else result_file_path + '.xlsx'

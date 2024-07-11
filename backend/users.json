@@ -6,5 +6,9 @@
   {
     "email": "nokia.mail@mail.com",
     "password": "$2a$10$1kW7JVUDd0QUokRxpGodcuAVjNops9oUkjXycVREnJvco/DdnOEhy"
+  },
+  {
+    "email": "aashit@aashit.com",
+    "password": "$2a$10$6FE670x4v.ni9L7wuZ4Sa.CkWVwFnH7nhJj81cy8MU6RRu0y9cfDO"
   }
 ]

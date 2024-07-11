@@ -4,13 +4,20 @@ import './FileDownloadList.css'; // Import the CSS file
 
 const FileDownloadList = () => {
   const [fileDetails, setFileDetails] = useState([]);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchFileDetails = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/processed-files');
+        const token = localStorage.getItem('token'); // Get the token from localStorage
+        const response = await axios.get('http://localhost:3001/processed-files', {
+          headers: {
+            'x-auth-token': token, // Add the token to the headers
+          },
+        });
         setFileDetails(response.data);
       } catch (error) {
+        setMessage('Error fetching file details');
         console.error('Error fetching file details:', error);
       }
     };

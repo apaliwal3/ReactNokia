@@ -43,6 +43,7 @@ import './FileUpload.css';
 
 const FileUpload = ({ onUploadComplete, script }) => {
   const [files, setFiles] = useState([]);
+  const [message, setMessage] = useState('');
 
   const handleFileChange = (e) => {
     setFiles(e.target.files);
@@ -56,13 +57,16 @@ const FileUpload = ({ onUploadComplete, script }) => {
     formData.append('script', script);
 
     try {
-      await axios.post('http://localhost:3001/upload', formData, {
+      const token = localStorage.getItem('token');
+      const response = await axios.post('http://localhost:3001/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'x-auth-token': token, // Add the token to the headers
         },
       });
       onUploadComplete();
     } catch (err) {
+      setMessage('Error uploading files');
       console.error('Error uploading files:', err);
     }
   };

@@ -26,7 +26,6 @@ import Navbar from './components/Navbar';
 import ProcessType1 from './pages/ProcessType1';
 import ProcessType2 from './pages/ProcessType2';
 import ProcessType3 from './pages/ProcessType3';
-import Signup from './components/Signup';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -38,9 +37,9 @@ const App = () => {
       <div>
         {!isAuthenticated && (
           <Routes>
-            <Route path="/signup" element={<Signup />} />
+            {/* <Route path="/signup" element={<Signup />} /> */}
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Navigate to="/signup" />} />
+            <Route path="/" element={<Navigate to="/login" />} />
           </Routes>
         )}
         {isAuthenticated && (

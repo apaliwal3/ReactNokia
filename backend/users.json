@@ -1,14 +1,19 @@
 [
-  {
-    "email": "dft@wrt.com",
-    "password": "$2a$10$PQ95qiiBYE.VJvETzftgQ.r/e3t8ug1yI1srtfVta1aZpc7n.sKTq"
-  },
-  {
-    "email": "nokia.mail@mail.com",
-    "password": "$2a$10$1kW7JVUDd0QUokRxpGodcuAVjNops9oUkjXycVREnJvco/DdnOEhy"
-  },
-  {
-    "email": "aashit@aashit.com",
-    "password": "$2a$10$6FE670x4v.ni9L7wuZ4Sa.CkWVwFnH7nhJj81cy8MU6RRu0y9cfDO"
-  }
+   {
+      "email": "dft@wrt.com",
+      "password": "$2a$10$PQ95qiiBYE.VJvETzftgQ.r/e3t8ug1yI1srtfVta1aZpc7n.sKTq"
+   },
+   {
+      "email": "nokia.mail@mail.com",
+      "password": "$2a$10$1kW7JVUDd0QUokRxpGodcuAVjNops9oUkjXycVREnJvco/DdnOEhy"
+   },
+   {
+      "email": "aashit@aashit.com",
+      "password": "$2a$10$6FE670x4v.ni9L7wuZ4Sa.CkWVwFnH7nhJj81cy8MU6RRu0y9cfDO"
+   },
+   {
+      "username": "rit",
+      "email": "rit@rit.com",
+      "password": "$2a$10$sKxEqT7hLp4.FLyQ2f.daudkEdKgfUuXoJKfghk93rahAiHvZVs1a"
+   }
 ]

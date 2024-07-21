@@ -19,16 +19,16 @@ const App = () => {
 
   return (
     <Router>
-      <div>
-        {!isAuthenticated && (
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Navigate to="/login" />} />
-          </Routes>
-        )}
-        {isAuthenticated && (
-          <>
-            <Navbar />
+      <div className="app">
+        <Navbar />
+        <div className="main-content">
+          {!isAuthenticated && (
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<Navigate to="/login" />} />
+            </Routes>
+          )}
+          {isAuthenticated && (
             <Routes>
               <Route
                 path="/type1"
@@ -48,8 +48,8 @@ const App = () => {
               />
               <Route path="/" element={<Navigate to="/type1" />} />
             </Routes>
-          </>
-        )}
+          )}
+        </div>
       </div>
     </Router>
   );

@@ -14,7 +14,9 @@
     "react-router-dom": "^6.24.0",
     "recharts": "^2.12.7",
     "stream-browserify": "^3.0.0",
-    "util": "^0.12.5"
+    "util": "^0.12.5",
+    "react-table": "^7.8.0",
+    "xlsx": "^0.18.5"
   },
   "name": "backend",
   "version": "1.0.0",

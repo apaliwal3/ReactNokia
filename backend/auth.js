@@ -71,7 +71,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const {username, password} = req.body;
+    const {username, password, role} = req.body;
     const users = loadUsers();
 
     const user = users.find(user => user.username === username);

@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+Navbar{
+  display: inline-block;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -36,3 +40,15 @@
     transform: rotate(360deg);
   }
 }
+
+/* Main content styles */
+.main-content {
+  margin-left: 60px; /* Default collapsed sidebar width */
+  transition: margin-left 0.3s ease;
+}
+
+/* When sidebar is expanded */
+.navbar.expanded ~ .main-content {
+  margin-left: 250px; /* Expanded sidebar width */
+}
+

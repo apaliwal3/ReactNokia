@@ -1,30 +1,82 @@
+/* Sidebar styles */
 .navbar {
-  background-color: darkcyan;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #8ecae6;
+  transition: width 0.3s ease;
+  overflow: hidden; /* Hide overflow to prevent content display issues */
+  z-index: 1000; /* Ensure it stays above the main content */
+}
+
+.navbar.expanded {
+  width: 250px; /* Expanded width */
+}
+
+.navbar.collapsed {
+  width: 60px; /* Collapsed width */
+}
+
+/* Hide content when collapsed */
+.navbar.collapsed .navbar-list,
+.navbar.collapsed .search-bar {
+  display: none;
+}
+
+/* Ensure toggle icon is visible */
+.navbar.collapsed .sidebar-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Sidebar content */
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: opacity 0.3s ease;
+}
+
+/* Search bar styles */
+.search-bar {
   padding: 1rem;
 }
 
+.search-bar input {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+}
+
+/* Navigation items */
 .navbar-list {
   list-style-type: none;
-  margin: 0;
   padding: 0;
+  margin: 0;
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .navbar-item {
-  margin: 0 1rem;
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
 }
 
-.navbar-item a {
+.navbar-item a, .navbar-item .logout-button {
   color: white;
   text-decoration: none;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
-  font-family: Helvetica, serif;
 }
 
 .navbar-item a:hover {
-  background-color: rgba(255, 255, 255, 0.2); /* Light highlight on hover */
+  font-size: 1.1rem;
   border-radius: 5px; /* Optional: Add some rounding to the highlight */
 }
 
@@ -34,4 +86,20 @@
   color: white;
   font-weight: bold;
   cursor: pointer;
+}
+
+/* Toggle icon styles */
+.sidebar-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: white;
+  font-size: 20px;
+}
+
+.toggle-icon {
+  font-size: 3rem;
+  display: block;
+  text-align: center;
 }

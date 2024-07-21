@@ -4,6 +4,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const authRoutes = require('./auth');
+const xlsx = require('xlsx');
 const authMiddleware = require('./middleware/auth');
 
 const upload = multer({ dest: 'uploads/' });
@@ -83,6 +84,49 @@ app.get('/download/:filename', authMiddleware, (req, res) => {
   } else {
     res.status(404).send('Processed file not found');
   }
+});
+
+// Endpoint to fetch data from Excel based on role
+app.get('/api/data', authMiddleware, (req, res) => {
+  const role = req.query.role; // Get the role from query parameters
+
+  // Define the path to your Excel file
+  const excelFilePath = path.join(__dirname, 'data/Data.xlsx');
+
+try {
+  // Read the Excel file
+  const workbook = xlsx.readFile(excelFilePath);
+  console.log('Workbook loaded:', workbook);
+
+  // Fetch data from each sheet based on role
+  const data = {
+    manager: [],
+    employee: [],
+    client: []
+  };
+
+  if (role === 'manager') {
+    const sheet = workbook.Sheets['Managers']; // Correct sheet name
+    console.log('Manager sheet:', sheet);
+    data.manager = xlsx.utils.sheet_to_json(sheet);
+  } else if (role === 'employee') {
+    const sheet = workbook.Sheets['Employees']; // Correct sheet name
+    console.log('Employee sheet:', sheet);
+    data.employee = xlsx.utils.sheet_to_json(sheet);
+  } else if (role === 'client') {
+    const sheet = workbook.Sheets['Clients']; // Correct sheet name
+    console.log('Client sheet:', sheet);
+    data.client = xlsx.utils.sheet_to_json(sheet);
+  } else {
+    return res.status(400).json({ error: 'Invalid role' });
+  }
+
+  console.log('Fetched data:', data);
+  res.json(data);
+} catch (error) {
+  console.error('Error reading Excel file:', error);
+  res.status(500).json({ error: 'Error reading Excel file' });
+}
 });
 
 app.listen(PORT, () => {

@@ -5,7 +5,7 @@
     user-select: none;
   }
   
-  .login {
+  .loginPage {
     width: 100%;
     height: 100vh;
     display: flex;
@@ -260,65 +260,4 @@
       width: 500px;
     }
   }
-
-
-  
-
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  width: 600px;
-  height: 100%;
-  padding: 25px;
-  background-color: #ecf0f3;
-  transition: transform 1.25s ease-in-out;
-}
-
-.main {
-  position: relative;
-  width: 1000px;
-  min-width: 1000px;
-  min-height: 600px;
-  height: 600px;
-  padding: 25px;
-  background-color: rgba(40, 44, 52, 1);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: transform 1.25s ease-in-out;
-}
-
-.container.b-container {
-  transform: translateX(0);
-}
-
-.container.a-container {
-  transform: translateX(-67%);
-}
-
-/* Ensure the switch container also animates smoothly */
-.switch {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 400px;
-  padding: 50px;
-  z-index: 200;
-  transition: transform 1.25s ease-in-out;
-}
-
-.switch-signin {
-  transform: translateX(0);
-}
-
-.switch-signup {
-  transform: translateX(149%);
-}
-
   

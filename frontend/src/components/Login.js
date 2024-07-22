@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import "./Login.css";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import './Login.css';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -14,24 +14,21 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const endpoint = isLogin ? "login" : "signup";
+    const endpoint = isLogin ? 'login' : 'signup';
     try {
-      const response = await axios.post(
-        `http://localhost:3001/auth/${endpoint}`,
-        { username, email, password, role }
-      );
-      localStorage.setItem("token", response.data.token);
+      const response = await axios.post(`http://localhost:3001/auth/${endpoint}`, { username, email, password, role });
+      localStorage.setItem('token', response.data.token);
       localStorage.setItem('role', role); // Save the role in local storage
-      setMessage(`${isLogin ? "Login" : "Signup"} successful!`);
-      navigate("/type1"); // Adjust this navigation based on role if needed
+      setMessage(`${isLogin ? 'Login' : 'Signup'} successful!`);
+      navigate('/type1'); // Adjust this navigation based on role if needed
     } catch (error) {
-      setMessage(`Error ${isLogin ? "logging in" : "signing up"}`);
+      setMessage(`Error ${isLogin ? 'logging in' : 'signing up'}`);
     }
   };
 
   const switchForm = () => {
     setIsLogin(!isLogin);
-    setMessage("");
+    setMessage('');
   };
 
   return (
@@ -88,7 +85,7 @@ const Login = () => {
           </form>
           {message && <p>{message}</p>}
         </div>
-        <div className="switch" id="switch-cnt">
+        <div className={`switch ${isLogin ? 'switch-signin' : 'switch-signup'}`} id={isLogin ? 'switch-signin' : 'switch-signup'}>
           <div className="switch__circle"></div>
           <div className="switch__circle switch__circle--t"></div>
           <div className="switch__container" id="switch-c1">

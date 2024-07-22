@@ -13,14 +13,17 @@ import ProcessType3 from "./pages/ProcessType3";
 import ProcessType4 from "./pages/ProcessType4";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import DataFetcher from "./pages/WorkDashboard";
+import './App.css';
 
 const App = () => {
   const isAuthenticated = !!localStorage.getItem("token");
 
   return (
     <Router>
+      <Navbar />
       <div className="app">
-        <Navbar />
+        
         <div className="main-content">
           {!isAuthenticated && (
             <Routes>
@@ -45,6 +48,10 @@ const App = () => {
               <Route
                 path="/type4"
                 element={<ProtectedRoute element={ProcessType4} />}
+              />
+              <Route
+                path="/type5"
+                element={<ProtectedRoute element={DataFetcher} />}
               />
               <Route path="/" element={<Navigate to="/type1" />} />
             </Routes>

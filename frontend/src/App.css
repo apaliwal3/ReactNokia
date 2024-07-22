@@ -1,12 +1,12 @@
-.App {
+.app {
   text-align: center;
 }
 
 Navbar{
-  display: inline-block;
+  display: block;
 }
 
-.App-logo {
+.app-logo {
   height: 40vmin;
   pointer-events: none;
 }
@@ -17,7 +17,7 @@ Navbar{
   }
 }
 
-.App-header {
+.app-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -28,7 +28,7 @@ Navbar{
   color: white;
 }
 
-.App-link {
+.app-link {
   color: #61dafb;
 }
 
@@ -52,3 +52,29 @@ Navbar{
   margin-left: 250px; /* Expanded sidebar width */
 }
 
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #7ce27f;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #ddd;
+}

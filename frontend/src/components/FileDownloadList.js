@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './FileDownloadList.css'; // Import the CSS file
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const FileDownloadList = () => {
   const [fileDetails, setFileDetails] = useState([]);
@@ -31,8 +32,9 @@ const FileDownloadList = () => {
       <table className="file-download-table">
         <thead>
           <tr>
-            <th>Original Filename</th>
+            <th>Filename</th>
             <th>Processed Timestamp</th>
+            <th>User</th>
             <th>Download</th>
           </tr>
         </thead>
@@ -41,7 +43,12 @@ const FileDownloadList = () => {
             <tr key={index}>
               <td>{file.originalName}</td>
               <td>{file.timestamp}</td>
-              <td><a href={file.url} download>Download</a></td>
+              <td>{file.user}</td>
+              <td>
+                <a href={file.url} download>
+                  <i className="fas fa-download"></i>
+                </a>
+              </td>
             </tr>
           ))}
         </tbody>

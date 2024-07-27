@@ -1,73 +1,38 @@
-/*import React, { useState } from 'react';
-import axios from 'axios';
-
-const FileUpload = ({ onUploadComplete }) => {
-  const [file, setFile] = useState(null);
-
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  const handleUpload = async () => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const res = await axios.post('http://localhost:3001/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      await axios.get(`http://localhost:3001/process?filePath=${res.data.filePath}`);
-      onUploadComplete();
-
-    } catch (err) {
-      console.error('Error uploading file: ', err);
-    }
-  };
-
-  return (
-    <div>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload</button>
-    </div>
-  );
-};
-
-export default FileUpload;*/
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import './FileUpload.css';
 
-const FileUpload = ({ onUploadComplete, script }) => {
+const FileUpload = ({ onUploadComplete, script, uploadDir, processedDir }) => {
   const [files, setFiles] = useState([]);
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e) => {
     setFiles(e.target.files);
   };
 
   const handleUpload = async () => {
+    setLoading(true);
     const formData = new FormData();
     Array.from(files).forEach(file => {
       formData.append('files', file);
     });
     formData.append('script', script);
-
+    formData.append('uploadDir', uploadDir);
+    formData.append('processedDir', processedDir);
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:3001/upload', formData, {
+      await axios.post('http://localhost:3001/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'x-auth-token': token, // Add the token to the headers
+          "x-auth-token": localStorage.getItem('token'), // Add the token to the headers
         },
       });
       onUploadComplete();
     } catch (err) {
       setMessage('Error uploading files');
       console.error('Error uploading files:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -78,7 +43,9 @@ const FileUpload = ({ onUploadComplete, script }) => {
           Select files to upload
           <input type="file" onChange={handleFileChange} multiple />
         </label>
-        <button className="upload-button" onClick={handleUpload}>Generate</button>
+        <button className="upload-button" onClick={handleUpload} disabled={loading}>
+          {loading ? 'Generating...' : 'Generate'}
+        </button>
       </div>
       <div className="file-info">
         {files.length > 0 && (
@@ -89,6 +56,12 @@ const FileUpload = ({ onUploadComplete, script }) => {
           </ul>
         )}
       </div>
+      {message && <p>{message}</p>}
+      {loading && (
+        <div className="loading-animation">
+          <div className="loader"></div>
+        </div>
+      )}
     </div>
   );
 };

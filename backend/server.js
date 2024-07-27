@@ -9,7 +9,24 @@ const authRoutes = require("./auth");
 const xlsx = require('xlsx');
 const authMiddleware = require("./middleware/auth");
 
-const upload = multer({ dest: "uploads/" });
+const setUploadDir = (req, res, next) => {
+  console.log('Request body:', req.body.uploadDir);
+  req.uploadDir = req.body.uploadDir || 'uploads/';
+  next();
+};
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = req.body.uploadDir || 'uploads/';
+    fs.mkdirSync(uploadDir, { recursive: true });
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
 
 const app = express();
 const port = 3001;
@@ -25,6 +42,23 @@ const pool = new Pool({
   password: "12345",
   port: 5432,
 });
+
+const processedDirs = {};
+const processedFilesInfo = {};
+
+const emptyDirectory = (dir) => {
+  if (fs.existsSync(dir)) {
+    fs.readdirSync(dir).forEach(file => {
+      const filePath = path.join(dir, file);
+      if (fs.lstatSync(filePath).isDirectory()) {
+        emptyDirectory(filePath);
+        fs.rmdirSync(filePath);
+      } else {
+        fs.unlinkSync(filePath);
+      }
+    });
+  }
+};
 
 app.post("/api/graph-data", authMiddleware, async (req, res) => {
   const { sqlQuery } = req.body;
@@ -42,81 +76,92 @@ app.post("/api/graph-data", authMiddleware, async (req, res) => {
   }
 });
 
-app.post(
-  "/upload",
-  [authMiddleware, upload.array("files")],
-  async (req, res) => {
-    const filePaths = req.files.map((file) => file.path);
-    const script = req.body.script;
+app.post('/upload', [authMiddleware, setUploadDir, upload.array('files')], async (req, res) => {
+  const uploadDir = path.join(__dirname, req.uploadDir);
+  console.log(req.uploadDir);
+  console.log('Upload directory:', uploadDir);
+  const processedDir = path.join(__dirname, req.body.processedDir || 'processed');
+  console.log('Processed directory:', processedDir);
+  const script = req.body.script;
 
-    const processFile = (filePath) => {
-      return new Promise((resolve, reject) => {
-        const scriptname = "scripts/" + script;
-        const process = spawn("python", [scriptname, filePath]);
+  const userID = req.user.id;
+  processedDirs[userID] = processedDir;
 
-        process.on("exit", (code) => {
-          if (code === 0) {
-            resolve();
-          } else {
-            reject(new Error(`Processing failed for ${filePath}`));
-          }
-        });
+  const processFiles = (uploadDir, processedDir) => {
+    return new Promise((resolve, reject) => {
+      const scriptname = 'scripts/' + script;
+      const process = spawn('python', [scriptname, uploadDir, processedDir]);
 
-        process.stdout.on("data", (data) => {
-          console.log(`stdout: ${data}`);
-        });
-
-        process.stderr.on("data", (data) => {
-          console.error(`stderr: ${data}`);
-        });
+      process.on('exit', (code) => {
+        if (code === 0) {
+          resolve();
+        } else {
+          reject(new Error(`Processing failed for directory ${uploadDir}`));
+        }
       });
-    };
 
-    try {
-      await Promise.all(filePaths.map(processFile));
-      res.sendStatus(200);
-    } catch (error) {
-      res.status(500).send(error.message);
-    }
+      process.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+      });
+
+      process.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+      });
+    });
+  };
+
+  try {
+    await processFiles(uploadDir, processedDir);
+    res.sendStatus(200);
+    emptyDirectory(uploadDir);
+  } catch (error) {
+    res.status(500).send(error.message);
   }
-);
+});
 
-app.get("/processed-files", authMiddleware, (req, res) => {
-  const processedDir = path.join(__dirname, "processed");
+app.get('/processed-files', authMiddleware, (req, res) => {
+  
+  const userId = req.user.id; // Assuming req.user.id is available from authMiddleware
+  const processedDir = processedDirs[userId] || path.join(__dirname, 'processed');
+  console.log('Processed retrieve directory:', processedDir);
   fs.readdir(processedDir, (err, files) => {
     if (err) {
-      return res.status(500).send("Unable to list files");
+      return res.status(500).send('Unable to list files');
     }
-    const fileDetails = files
-      .map((file) => {
-        const match = file.match(
-          /^(.*)_processed_(\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2})\.xlsx$/
-        );
-        if (match) {
-          const originalName = match[1] + ".xlsx";
-          const timestamp = match[2];
-          return {
+    const fileDetailsPromises = files.map(file => {
+      return new Promise((resolve, reject) => {
+        const filePath = path.join(processedDir, file);
+        fs.stat(filePath, (err, stats) => {
+          if (err) {
+            return reject(err);
+          }
+          const originalName = path.basename(file, path.extname(file));
+          const timestamp = new Date(stats.mtime).toLocaleString().replace(/,/, '').replace(/:/g, '-').replace(/ /g, '_');
+          resolve({
             url: `http://localhost:3001/download/${file}`,
             originalName: originalName,
             timestamp: timestamp,
-          };
-        } else {
-          return null;
-        }
-      })
-      .filter((file) => file !== null);
+            user: userId
+          });
+        });
+      });
+    });
 
-    fileDetails.sort(
-      (a, b) =>
-        new Date(b.timestamp.replace(/_/g, ":").replace(/-/g, ":")) -
-        new Date(a.timestamp.replace(/_/g, ":").replace(/-/g, ":"))
-    );
-    res.json(fileDetails);
+    Promise.all(fileDetailsPromises)
+      .then(fileDetails => {
+        fileDetails.sort((a, b) => new Date(b.timestamp.replace(/_/g, 'T').replace(/-/g, ':')) - new Date(a.timestamp.replace(/_/g, 'T').replace(/-/g, ':')));
+        res.json(fileDetails);
+      })
+      .catch(err => {
+        res.status(500).send('Error retrieving file details');
+      });
   });
 });
 
-app.get("/download/:filename", authMiddleware, (req, res) => {
-  const filePath = path.join(__dirname, "processed", req.params.filename);
+app.get('/download/:filename', authMiddleware, (req, res) => {
+  const userId = req.user.id; // Assuming req.user.id is available from authMiddleware
+  const processedDir = processedDirs[userId] || path.join(__dirname, 'processed');
+  const filePath = path.join(processedDir, req.params.filename);
   if (fs.existsSync(filePath)) {
     res.download(filePath, req.params.filename);
   } else {

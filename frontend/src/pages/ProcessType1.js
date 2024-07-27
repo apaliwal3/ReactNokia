@@ -12,8 +12,13 @@ const ProcessType1 = () => {
 
   return (
     <div>
-      <h1 className="page-title">PROCESS 1</h1>
-      <FileUpload onUploadComplete={handleUploadComplete} script="process_excel.py" />
+      <h1 className="page-title">RSSI Tracker</h1>
+      <FileUpload 
+      onUploadComplete={handleUploadComplete} 
+      script="RSSI_Tracker.py" 
+      uploadDir="uploads/process1"
+      processedDir="processed/process1"
+      />
       {uploaded && <FileDownloadList />}
     </div>
   );

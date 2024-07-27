@@ -18,7 +18,7 @@
 }
 
 .file-download-table th {
-  background-color: darkcyan;
+  background-color: #457b9d;
   color: white;
 }
 
@@ -31,7 +31,7 @@
 }
 
 .file-download-table a {
-  color: darkcyan;
+  color: #457b9d;
   text-decoration: none;
 }
 

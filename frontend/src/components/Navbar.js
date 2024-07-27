@@ -25,7 +25,7 @@ const Navbar = () => {
           <input type="text" placeholder="Search..." />
         </div>
         <ul className="navbar-list">
-          <li className="navbar-item"><Link to="/">PROCESS 1</Link></li>
+          <li className="navbar-item"><Link to="/">RSSI Tracker</Link></li>
           <li className="navbar-item"><Link to="/type2">PROCESS 2</Link></li>
           <li className="navbar-item"><Link to="/type3">PROCESS 3</Link></li>
           <li className="navbar-item"><Link to="/type4">Graph Demo</Link></li>

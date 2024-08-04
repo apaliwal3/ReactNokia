@@ -21,6 +21,7 @@ const Login = () => {
       localStorage.setItem('role', role); // Save the role in local storage
       setMessage(`${isLogin ? 'Login' : 'Signup'} successful!`);
       navigate('/type1'); // Adjust this navigation based on role if needed
+      window.location.reload();
     } catch (error) {
       setMessage(`Error ${isLogin ? 'logging in' : 'signing up'}`);
     }

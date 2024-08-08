@@ -72,39 +72,79 @@ const ProcessType4 = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <div>
+      <h1 className="page-title">VodaCom 2G PLMN NBH Graph</h1>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          backgroundColor: "#628cf5",
+          padding: "20px",
+          borderRadius: "8px",
+          color: "white",
+          display: "flex"
+        }}
+      >
+        <div style={{ marginBottom: "10px", backgroundColor: "#314f99", width: "25vw",marginRight: "10px", height: "5vh", paddingTop: "5px" }}>
           <label>
             Start Date:
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
+              style={{
+                marginLeft: "10px",
+                padding: "5px",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+              }}
             />
           </label>
-        </div>
-        <div>
           <label>
             End Date:
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
+              style={{
+                marginLeft: "10px",
+                padding: "5px",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+              }}
             />
           </label>
         </div>
-        <div>
+        <div style={{ marginBottom: "10px", backgroundColor: "#314f99",marginRight: "10px", height: "5vh", paddingTop: "5px", width: "20vw"  }}>
           <label>
             Primary Key:
             <input
               type="text"
               value={primaryKey}
               onChange={(e) => setPrimaryKey(e.target.value)}
+              style={{
+                marginLeft: "10px",
+                padding: "5px",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+              }}
             />
           </label>
         </div>
-        <button type="submit">Fetch Graph Data</button>
+        <button
+          type="submit"
+          style={{
+            padding: "10px 20px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            marginLeft: "50%"
+          }}
+        >
+          Fetch Graph Data
+        </button>
       </form>
+
       {columns.map((col) => (
         <div key={col}>
           <h2>{col}</h2>

@@ -81,7 +81,8 @@ def tracker(file, folder, combine_df):
             s1_pvt['Count_Last7'] = s1_condition.sum(axis=1)
             s1_pvt = s1_pvt[~s1_pvt['Count_Last7'].isin([0, 1, 2, 3])]
             s1_pvt.drop(columns='Count_Last7', inplace=True)
-            with pd.ExcelWriter(processDir + r"/RSSI_S1_Erc.xlsx", engine='xlsxwriter') as writer:
+            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+            with pd.ExcelWriter(processDir + f"/RSSI_S1_Erc_{timestamp}.xlsx", engine='xlsxwriter') as writer:
                 # Write each DataFrame to a different sheet
                 merg_pvt.to_excel(writer, sheet_name='RSSI_Tracker')
                 s1_pvt.to_excel(writer, sheet_name='S1_Tracker')
@@ -166,7 +167,8 @@ def tracker(file, folder, combine_df):
             merg_psh = merg_psh[~merg_psh['Count_Last7'].isin([0, 1, 2, 3])]
             merg_psh.drop(columns='Count_Last7', inplace=True)
             # merg_psh.to_csv(folder + r"\\RSSI_PUSCH.csv")
-            with pd.ExcelWriter(processDir + r"/RSSI_Nokia.xlsx", engine='xlsxwriter') as writer:
+            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+            with pd.ExcelWriter(processDir + f"/RSSI_Nokia_{timestamp}.xlsx", engine='xlsxwriter') as writer:
                 # Write each DataFrame to a different sheet
                 merg_pvt.to_excel(writer, sheet_name='PUCCH')
                 merg_psh.to_excel(writer, sheet_name='PUSCH')

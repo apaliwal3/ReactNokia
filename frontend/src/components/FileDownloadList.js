@@ -3,28 +3,60 @@ import axios from 'axios';
 import './FileDownloadList.css'; // Import the CSS file
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
-const FileDownloadList = () => {
+const FileDownloadList = ({uploaded, processedDir}) => {
   const [fileDetails, setFileDetails] = useState([]);
   const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    const fetchFileDetails = async () => {
-      try {
-        const token = localStorage.getItem('token'); // Get the token from localStorage
-        const response = await axios.get('http://localhost:3001/processed-files', {
-          headers: {
-            'x-auth-token': token, // Add the token to the headers
-          },
-        });
-        setFileDetails(response.data);
-      } catch (error) {
-        setMessage('Error fetching file details');
-        console.error('Error fetching file details:', error);
-      }
-    };
+  const fetchFileDetails = async () => {
+    try {
+      const token = localStorage.getItem('token'); // Get the token from localStorage
+      const response = await axios.get('http://localhost:3001/processed-files', {
+        headers: {
+          'x-auth-token': token, // Add the token to the headers
+          'processed-dir': processedDir, // Pass the processed directory
+        },
+      });
+      setFileDetails(response.data);
+    } catch (error) {
+      setMessage('Error fetching file details');
+      console.error('Error fetching file details:', error);
+    }
+  };
 
+  const handleDownload = async (fileName) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setMessage('No token found, authorization denied.');
+      return;
+    }
+
+    try {
+      const response = await axios.get(`http://localhost:3001/download/${fileName}`, {
+        headers: {
+          'x-auth-token': token,
+          'processed-dir': processedDir,
+        },
+        responseType: 'blob', // Ensure the response is in blob format for file download
+      });
+
+      // Create a temporary URL for the blob and trigger the download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = (fileName);
+      //link.setAttribute('download', "");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Error downloading file:', error);
+      setMessage('Error downloading file');
+    }
+  };
+
+  useEffect(() => {
     fetchFileDetails();
-  }, []);
+  }, [uploaded, processedDir]);
 
   return (
     <div className="file-download-container">
@@ -45,9 +77,9 @@ const FileDownloadList = () => {
               <td>{file.timestamp}</td>
               <td>{file.user}</td>
               <td>
-                <a href={file.url} download>
+                <button onClick={() => handleDownload(file.originalName)}>
                   <i className="fas fa-download"></i>
-                </a>
+                </button>
               </td>
             </tr>
           ))}
@@ -58,5 +90,3 @@ const FileDownloadList = () => {
 };
 
 export default FileDownloadList;
-
-

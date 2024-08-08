@@ -10,16 +10,17 @@ const ProcessType1 = () => {
     setUploaded(true);
   };
 
+  const processedDir = "processed/process1";
+
   return (
     <div>
       <h1 className="page-title">RSSI Tracker</h1>
       <FileUpload 
       onUploadComplete={handleUploadComplete} 
       script="RSSI_Tracker.py" 
-      uploadDir="uploads/process1"
-      processedDir="processed/process1"
+      processedDir={processedDir}
       />
-      {uploaded && <FileDownloadList />}
+      <FileDownloadList processedDir={processedDir} uploaded={uploaded} /> 
     </div>
   );
 };

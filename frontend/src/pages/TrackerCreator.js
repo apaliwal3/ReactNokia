@@ -24,10 +24,7 @@ const TrackerCreator = () => {
         'http://localhost:3001/create-tracker',
         formData,
         {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}` // Include token in the request headers
-          }
+          headers: { "x-auth-token": localStorage.getItem("token") }
         }
       );
       setMessage('Tracker created successfully!');

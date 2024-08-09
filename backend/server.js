@@ -122,7 +122,7 @@ app.post('/upload', [authMiddleware, setUploadDir, upload.array('files')], async
 app.get('/processed-files', authMiddleware, (req, res) => {
   
   const userId = req.user.id; // Assuming req.user.id is available from authMiddleware
-  const processedDir = processedDirs[userId] || path.join(__dirname, 'processed');
+  const processedDir = req.headers['processed-dir'] ||  processedDirs[userId] || path.join(__dirname, 'processed');
   console.log('Processed retrieve directory:', processedDir);
   fs.readdir(processedDir, (err, files) => {
     if (err) {
@@ -135,7 +135,8 @@ app.get('/processed-files', authMiddleware, (req, res) => {
           if (err) {
             return reject(err);
           }
-          const originalName = path.basename(file, path.extname(file));
+          const originalName = path.basename(file);
+          console.log('Original name:', originalName);
           const timestamp = new Date(stats.mtime).toLocaleString().replace(/,/, '').replace(/:/g, '-').replace(/ /g, '_');
           resolve({
             url: `http://localhost:3001/download/${file}`,
@@ -160,10 +161,13 @@ app.get('/processed-files', authMiddleware, (req, res) => {
 
 app.get('/download/:filename', authMiddleware, (req, res) => {
   const userId = req.user.id; // Assuming req.user.id is available from authMiddleware
-  const processedDir = processedDirs[userId] || path.join(__dirname, 'processed');
+  const processedDir = path.join(__dirname, req.headers['processed-dir']) || processedDirs[userId] || path.join(__dirname, 'processed');
   const filePath = path.join(processedDir, req.params.filename);
-  if (fs.existsSync(filePath)) {
-    res.download(filePath, req.params.filename);
+  console.log('Download file:', filePath);
+  const fileExists = fs.existsSync(filePath);
+  console.log('File exists:', fileExists);
+  if (fileExists) {
+    res.download(filePath);
   } else {
     res.status(404).send('Processed file not found');
   }

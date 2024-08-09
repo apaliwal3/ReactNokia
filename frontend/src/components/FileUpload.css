@@ -62,6 +62,8 @@
   color: #457b9d;
   display: grid;
   animation: l38-0 6s infinite linear;
+  margin-top: 1rem;
+  margin-left: 2rem;
 }
 .loader:before,
 .loader:after {

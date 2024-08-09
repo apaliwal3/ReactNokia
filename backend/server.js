@@ -212,6 +212,85 @@ try {
 }
 });
 
+// Add this in server.js
+// In your server.js or equivalent file
+app.post("/create-tracker", authMiddleware, upload.single("script"), (req, res) => {
+  console.log("Create Tracker Request received.");
+  
+  // Check if the file and trackerName are received
+  const { trackerName } = req.body;
+  const scriptFile = req.file;
+
+  console.log("Tracker Name:", trackerName);
+  console.log("Uploaded Script File:", scriptFile);
+
+  if (!trackerName || !scriptFile) {
+    return res.status(400).json({ msg: "Missing required fields" });
+  }
+
+  // Assuming you save the file and create the tracker here
+  const scriptFilePath = `./scripts/${scriptFile.filename}`;
+
+  // Assuming you also save the tracker details in a database or a file
+  try {
+    // Save tracker logic
+    console.log("Tracker creation logic goes here");
+
+    // Simulate successful creation
+    return res.status(201).json({ msg: "Tracker created successfully" });
+  } catch (error) {
+    console.error("Error creating tracker:", error);
+    return res.status(500).json({ msg: "Failed to create tracker, please try again" });
+  }
+});
+
+
+// Example for handling dynamic routing based on tracker name
+app.post('/upload/:trackerName', [authMiddleware, setUploadDir, upload.array('files')], async (req, res) => {
+  const trackerName = req.params.trackerName;
+  const trackersDir = path.join(__dirname, 'trackers');
+  const trackerDir = path.join(trackersDir, trackerName);
+  
+  if (!fs.existsSync(trackerDir)) {
+    return res.status(404).send("Tracker not found.");
+  }
+
+  const scriptPath = fs.readdirSync(trackerDir).find(file => file.endsWith('.py'));
+  if (!scriptPath) {
+    return res.status(500).send("Tracker script not found.");
+  }
+
+  const processFiles = (uploadDir, processedDir) => {
+    return new Promise((resolve, reject) => {
+      const process = spawn('python', [path.join(trackerDir, scriptPath), uploadDir, processedDir]);
+
+      process.on('exit', (code) => {
+        if (code === 0) {
+          resolve();
+        } else {
+          reject(new Error(`Processing failed for tracker ${trackerName}`));
+        }
+      });
+
+      process.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+      });
+
+      process.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+      });
+    });
+  };
+
+  try {
+    await processFiles(req.uploadDir, trackerDir);
+    res.sendStatus(200);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

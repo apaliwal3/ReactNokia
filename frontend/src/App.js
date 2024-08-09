@@ -14,6 +14,7 @@ import ProcessType4 from "./pages/ProcessType4";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DataFetcher from "./pages/WorkDashboard";
+import TrackerCreator from "./pages/TrackerCreator";
 import './App.css';
 
 const App = () => {
@@ -52,6 +53,10 @@ const App = () => {
               <Route
                 path="/type5"
                 element={<ProtectedRoute element={DataFetcher} />}
+              />
+              <Route
+                path="/create-tracker"
+                element={<ProtectedRoute element={TrackerCreator} />}
               />
               <Route path="/" element={<Navigate to="/type1" />} />
             </Routes>

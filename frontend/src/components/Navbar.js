@@ -31,6 +31,7 @@ const Navbar = () => {
           <li className="navbar-item"><Link to="/type3">PROCESS 3</Link></li>
           <li className="navbar-item"><Link to="/type4">Graph Demo</Link></li>
           <li className="navbar-item"><Link to="/type5">Work Tracker</Link></li>
+          <li className="navbar-item"><Link to="/create-tracker">Tracker Creator</Link></li>
           <li className="navbar-item"><button onClick={handleLogout} className="logout-button">Logout</button></li>
         </ul>
       </div>
